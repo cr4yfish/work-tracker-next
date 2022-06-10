@@ -1,8 +1,9 @@
 import Head from 'next/head';
 import { useStopwatch } from 'react-timer-hook';
-import { Container, Button, Spacer, Table, useAsyncList, useCollator } from "@nextui-org/react";
-import useSWR from 'swr';
-import { useEffect, useState } from "react"
+import { Container, Button, Table, Grid, Text } from "@nextui-org/react";
+import useSWR, { mutate, useSWRConfig} from 'swr';
+
+import { FaPlay, FaStop, FaStopCircle } from 'react-icons/fa';
 
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
@@ -35,6 +36,10 @@ function MyStopwatch() {
     const obj = { date: date, timeInSeconds: timeInSeconds };
     const options = { method: "POST", body: JSON.stringify(obj) };
     const databaseRes = await fetch(`api/send`, options);
+
+    // update swr data
+    mutate("/api/get");
+
     return databaseRes;
   }
 
@@ -43,13 +48,25 @@ function MyStopwatch() {
   return (
     <div>
       <h1>Work Tracker</h1>
-      <div>
-        <span>{checkNum10(hours)}</span>:<span>{checkNum10(minutes)}</span>:<span>{checkNum10(seconds)}</span>
-      </div>
-      <p>{isRunning ? 'Running' : 'Not running'}</p>
-      {isRunning ? <Button color="secondary" onClick={stop}>Pause</Button> :<Button onClick={start}>Start</Button> }
-      <Spacer />
-      <Button color="warn" bordered onClick={reset}>Reset</Button>
+      <Container>
+      <Grid.Container>
+        <Text h2>{checkNum10(hours)}</Text>
+        <Text h2>:</Text>
+        <Text h2>{checkNum10(minutes)}</Text>
+        <Text h2>:</Text>
+        <Text h2>{checkNum10(seconds)}</Text>
+      </Grid.Container>
+      
+        <Grid.Container gap={2}>
+          <Grid>
+            {isRunning ? <Container><Button shadow iconRight={<FaStop />} color="secondary" onClick={stop}>Pause</Button></Container> : <Container><Button shadow iconRight={<FaPlay />} onClick={start}>Start</Button></Container>}
+          </Grid>
+          <Grid>
+            <Container><Button color="error" bordered onClick={() => {reset()}} fill="currentColor" iconRight={<FaStopCircle  />} >Reset</Button></Container>
+          </Grid>
+        </Grid.Container>
+      </Container>
+
     </div>
   );
 }
@@ -70,7 +87,7 @@ const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
 
 // take in ms time and return as DD.MM.YYYYY
 const formatTime = (date) => {
-  const todayDate = cleanTimeString(new Date().getTime());
+  let todayDate = cleanTimeString(new Date().getTime());
 
   // Figure out if date lies in current week
   const weekStart = todayDate - (todayDate % (1000 * 60 * 60 * 24 * 7));
@@ -81,10 +98,16 @@ const formatTime = (date) => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
-  if(isInWeek) {
-    return `Last ${days[date.getDay()]}, ${day}.${month}.${year}`;
-  }
+
+  const todayDateObj = new Date(todayDate);
+
+  if(todayDateObj.getFullYear() == year && todayDateObj.getMonth()+1 == month && todayDateObj.getDate() == day) {
+    return `Today, ${day}.${month}.${year}`
+  };
+
+  if(isInWeek) { return `Last ${days[date.getDay()]}, ${day}.${month}.${year}` }
   return `${day < 10 ? "0" + day : day}.${month < 10 ? "0" + day : day}.${year}`;
+
 }
 
 const columns = [

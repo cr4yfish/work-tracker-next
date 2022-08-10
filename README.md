@@ -1,34 +1,123 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div id="top"></div>
 
-## Getting Started
+<br />
+<div align="center">
 
-First, run the development server:
+  <h3 align="center">Work Tracker</h3>
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+  <p align="center">
+    Tracks your work time and stores it in a database. Perfect to use with a raspberry to selfhost a local server.
+    <br />
+    <br />
+    <a href="https://github.com/cr4yfish/work-tracker/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/cr4yfish/work-tracker/issues">Request Feature</a>
+  </p>
+</div>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#settings">Settings</a></li>
+        <li><a href="#usage">Usage</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+  </ol>
+</details>
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## About The Project
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+So I got a job which does not track my worktime automatically, but I need to keep track of it in order to not work for free.
+I came up with the idea of basically taking my foodTracker and using it's base to build another application which
+can track time I spent working and store it in a database. It then can automatically choose the entries from the current workweek and
+add the time values up to a week overview which then tells me how much I have worked so far and how much worktime I have left.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+All in a single-page webapp dashboard, so you never have to switch pages.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+### Built With
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* [node.js](https://nodejs.org/en/)
+* [nedb](https://www.npmjs.com/package/@seald-io/nedb)
+* [ejs](https://ejs.co/)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
+### Prerequisites
+
+* node
+    ```
+    sudo apt-get node
+    ```
+
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+For the update client to work
+* pm2
+ ```
+ npm install pm2
+ ```
+
+### Installation
+
+1. Install NodeJS
+2. Clone the repo
+    ```sh
+    git clone https://github.com/cr4yfish/work-tracker-next.git
+    ```
+3. Perform first-time setup
+    ```sh
+    cd work-tracker-next
+    ```
+    ```sh
+    yarn
+    ```
+or
+    ```sh
+    npm i
+    ```
+Wait for the script to finish (The script just makes the 'update.sh' file an executable and adds the server to pm2).
+
+4. Build
+    ```sh
+    npm run build
+    ```
+    
+5. Start
+    ```sh
+    npm run start
+    ```
+
+You can then use pm2 or systemd - or whatever you prefer. For a PM2 Setup, continue reading.
+
+(Optional)
+6. Pm2 setup
+    ```sh
+    pm2 start npm --name work-tracker-next -- start
+    ```
+    
+## Usage
+
+1. Open   
+    ```sh
+    http://{your IP address or the one from the server}:3000
+    ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
